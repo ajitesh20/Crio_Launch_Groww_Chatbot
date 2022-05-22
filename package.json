@@ -1,0 +1,26 @@
+{
+  "name": "ajiteshsaxena20-me_cwod_groww_chatbot",
+  "version": "1.0.0",
+  "description": "A chatbot for Groww Website",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.crio.do/COHORT_ME_CWOD_GROWW_CHATBOT_ENROLL_1650883674645/ajiteshsaxena20-ME_CWOD_GROWW_CHATBOT.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.1",
+    "joi": "^17.6.0",
+    "joi-objectid": "^4.0.2",
+    "mongoose": "^6.3.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
