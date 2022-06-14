@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
+const passportLocalMongoose = require('passport-local-mongoose');
 
 const userSchema = new Schema({
     name: {
@@ -8,7 +9,8 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     mobile: {
         type: String,
@@ -31,6 +33,10 @@ const userSchema = new Schema({
         type: String,
         default: './assets/profile_photos/default.png'
     },
+    max_orders_per_day: {
+        type: Number,
+        default: 10
+    },
     owned_products: [{
         product_category: String,
         product_id: Schema.Types.ObjectId,
@@ -39,3 +45,7 @@ const userSchema = new Schema({
         product_image: String
     }]
 });
+
+userSchema.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model('user', userSchema, 'user');

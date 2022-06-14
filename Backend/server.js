@@ -7,21 +7,13 @@ const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const cors = require('cors');
 const passport = require('passport');
-const bcrypt = require('bcrypt');
 const session = require('express-session');
 const flash = require('express-flash');
-const swaggerUI = require('swagger-ui-express');
 const morgan = require('morgan');
-
-const specs = require('./swaggerDoc');
-const initializePassport = require('./passport-config');
-
-initializePassport(passport,
-    id => users.find(user => user.id === id)
-);
-
+const userModel = require('./models/user');
 const userRoutes = require('./routes/user');
 const chatbotRoutes = require('./routes/chatbot');
+const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
 
@@ -51,12 +43,15 @@ app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: true,
+    cookie: { maxAge: 10 * 24 * 60 * 60 * 1000 }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+passport.serializeUser(userModel.serializeUser());
+passport.deserializeUser(userModel.deserializeUser());
+passport.use(new LocalStrategy(userModel.authenticate()));
 app.use(morgan('dev'));
-app.use("/swagger", swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use('/user', userRoutes);
 app.use('/', chatbotRoutes);

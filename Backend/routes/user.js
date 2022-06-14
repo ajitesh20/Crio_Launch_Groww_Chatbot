@@ -1,108 +1,109 @@
-/**
- * @swagger
- * components:
- *  schemas:
- *      User:
- *          type: object
- *          required:
- *              - name
- *              - email
- *              - mobile
- *              - password
- * 
- *          properties:
- *              _id:
- *                  type: string
- *              name:
- *                  type: string
- *              email:
- *                  type: string
- *              mobile:
- *                  type: string
- *              password:
- *                  type: string
- *              kyc:
- *                  type: boolean
- *              gender:
- *                  type: string
- *              profile_photo:
- *                  type: string
- *              owned_products:
- *                  type: array of product objects
- */
-
-/**
- * @swagger
- * /user/register:
- *     post:
- *        description: Register a new user
- *        parameters:
- *          - in: body
- *            name: user
- *            schema:
- *            type: string
- *          - email: user
- *            schema:
- *            type: string
- *          - mobile: user
- *            in: body
- *            schema:
- *            type: string
- *          - password: user
- *            in: body
- *            schema:
- *            type: string
- *          - kyc: user
- *            in: body
- *            schema:
- *            type: boolean
- *          - gender: user
- *            in: body
- *            schema:
- *            type: string
- * 
- *        responses:
- *         '200':
- *              description: A successful response
- *              content:
- *                application/json:
- *                  schema:
- *                   items:
- *                      $ref: '#/components/schemas/User'
- */
-
 let userHelper = require('../helpers/user');
 const express = require('express');
 const passport = require("passport");
 const router = express.Router();
+const bcrypt = require('bcrypt');
+const userModel = require('../models/user');
 
 router.post('/register', async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, process.env.ROUND);
-        const user = new User({
-            name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            password: hashedPassword,
-            kyc: false,
-            profile_photo: './assets/profile_photos/default.png',
-            owned_products: []
-        });
-        user.save();
-        res.redirect('/login');
-    } catch (err) {
-        res.redirect('/register');
-    }
+    bcrypt.genSalt(parseInt(process.env.ROUND), function (err, salt) {
+        if (err) console.log(err);
+        else
+            bcrypt.hash(req.body.password, salt, function (err, hash) {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/register');
+                } else {
+                    if (req.body.mobile == null || req.body.mobile == '' || req.body.mobile == undefined) {
+                        req.body.kyc = false;
+                    }
+                    else req.body.kyc = true;
+                    const user = new userModel({
+                        name: req.body.name,
+                        email: req.body.email,
+                        mobile: req.body.mobile,
+                        password: hash,
+                        kyc: req.body.kyc,
+                        profile_photo: './assets/profile_photos/default.png',
+                        owned_products: []
+                    });
+                    user.save((err, user) => {
+                        if (err) {
+                            console.log(err);
+                            res.status(409).json({
+                                message: "user already exists"
+                            });
+                        }
+                        else {
+                            req.session.user = user;
+                            req.session.save();
+                            res.status(200).json({
+                                message: "Successfully registered user",
+                            });
+                        }
+                    });
+                }
+            });
+    });
 });
 
 router.get('/login', (req, res) => {
-    res.send('login');
+    if (req.isAuthenticated()) {
+        res.redirect('/');
+    }
+    else res.send('login');
 });
 
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}));
+router.post('/login', (req, res) => {
+    userModel.findOne({ email: req.body.email }, (err, user) => {
+        if (err) {
+            console.log(err);
+            res.redirect('/login');
+        }
+        else if (!user) {
+            res.redirect('/login');
+        }
+        else {
+            bcrypt.compare(req.body.password, user.password, function (err, result) {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/login');
+                }
+                else if (result) {
+                    req.session.user = user;
+                    req.session.save();
+                    req.login(user, function (err) {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).json({
+                                message: "Error while logging in"
+                            });
+                        }
+                        res.redirect('/');
+                    });
+                }
+            });
+        }
+    });
+});
+
+router.get('/logout', function (req, res) {
+    req.logout((err) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: "Error logging out"
+            });
+        }
+        else {
+            res.status(200).clearCookie('connect.sid', {
+                path: '/'
+            });
+            req.session.destroy(function (err) {
+                res.redirect('/');
+            });
+        }
+    });
+});
 
 module.exports = router;

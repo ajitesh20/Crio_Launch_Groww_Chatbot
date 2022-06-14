@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 let categoryModel = require('../models/category');
 
 let categoryHelper = {
