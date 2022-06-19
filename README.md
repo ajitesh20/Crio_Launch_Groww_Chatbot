@@ -14,6 +14,7 @@ Worked on a chatbot that display relevant questions based on the context of the 
 ### To run the project:
 
 first add .env file to the project directory which contains the following fields:
+
 MONGO_URI=
 
 environment=
@@ -23,3 +24,5 @@ PORT=
 HOST=
 
 SECRET_KEY=
+
+To start backend & frontnd run *npm start* in different terminals in their respective folders.
