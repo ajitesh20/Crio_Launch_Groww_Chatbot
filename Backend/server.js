@@ -1,61 +1,36 @@
-if (process.env.NODE_ENV !== 'production') {
+const express = require('express');
+const mongoose = require('mongoose');
+const logger = require('./middleware/logger');
+const validation = require('./middleware/validation');
+let cors = require('cors');
+
+if (process.env.environment !== 'production') {
     require('dotenv').config();
 }
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cookieParser = require("cookie-parser");
-const cors = require('cors');
-const passport = require('passport');
-const session = require('express-session');
-const flash = require('express-flash');
-const morgan = require('morgan');
-const userModel = require('./models/user');
-const userRoutes = require('./routes/user');
-const chatbotRoutes = require('./routes/chatbot');
-const LocalStrategy = require('passport-local').Strategy;
+let app = express();
 
-const app = express();
-
-//connecting to the database
-mongoose.connect(process.env.MONGODB_URI, {
+// creating connection to database
+mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-    .then(() => {
-        console.log('Connected to MONGODB database');
-    })
-    .catch(err => {
-        console.log(err);
-    })
+    .then(() => console.log("connected to mongoDB"))
+    .catch((err) => console.log(err))
 
-
-const corsOptions = {
-    origin: [process.env.FRONTEND, process.env.ADMIN],
-    credentials: true
-}
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
-app.use(cookieParser());
-app.use(express.static('assets'));
-app.use(flash());
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { maxAge: 10 * 24 * 60 * 60 * 1000 }
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-passport.serializeUser(userModel.serializeUser());
-passport.deserializeUser(userModel.deserializeUser());
-passport.use(new LocalStrategy(userModel.authenticate()));
-app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: false }));
+app.use(logger);
+app.use(validation);
 
-app.use('/user', userRoutes);
-app.use('/', chatbotRoutes);
+app.use('/api/v1/auth', require('./routes/auth_routes'));
+app.use('/api/v1/product', require('./routes/product_routes'));
+app.use('/api/v1/order', require('./routes/order_routes'));
+app.use('/api/v1/faq', require('./routes/faq_routes'));
+app.get('/',(req,res)=>res.send("Hello"));
 
-app.listen(process.env.PORT, () => {
-    console.log('Server is running on port', process.env.PORT);
-});
+const PORT = process.env.PORT;
+const HOST = process.env.HOST;
+app.listen(PORT, () => console.log(`Server running on http://${HOST}:${PORT}`));
+module.exports = app;
