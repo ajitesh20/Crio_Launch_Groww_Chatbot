@@ -75,7 +75,10 @@ productSchema.methods.getPayload = async function () {
         id: product.id,
         name: product.name,
         category: product.category,
-        specifications: specs
+        specifications: specs,
+        img: product.img,
+        price: product.price,
+        rate: product.rate
     }
 }
 const Product = new mongoose.model("Product", productSchema);

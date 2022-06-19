@@ -45,7 +45,6 @@ faqHelper.getAllFAQ = async (req, res) => {
             res.json(faqs).status(200)
             return;
         }
-        console.log(req.query)
         if (req.query.message) {
             const reply = await faqModel.findOne({ question: req.query.message, status: "Answered" });
             if (reply) {
