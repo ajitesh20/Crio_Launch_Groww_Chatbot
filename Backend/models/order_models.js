@@ -44,4 +44,6 @@ orderSchema.methods.getPayload = async function () {
     }
     return response;
 }
-exports.Order = new mongoose.model('Order', orderSchema);
+let Order = mongoose.model('Order', orderSchema);
+
+module.exports = Order;

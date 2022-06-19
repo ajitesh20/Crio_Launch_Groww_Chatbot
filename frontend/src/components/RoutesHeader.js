@@ -104,46 +104,6 @@ function RoutesHeader({ category }) {
             {mutualFunds && <Line />}
           </Link>
         </MutualFunds>
-        <FixedDeposits>
-          <Link to="/fixed-deposits">
-            {fdColor ? (
-              <span style={{ color: "#00d09c", fontWeight: "500" }}>
-                Fixed Deposits
-              </span>
-            ) : (
-              <span>Fixed Deposits</span>
-            )}
-            {/* Fixed Deposits */}
-            {/* <Line /> */}
-            {fixedDeposits && <Line />}
-          </Link>
-        </FixedDeposits>
-        <Gold>
-          <Link to="/gold">
-            {goldColor ? (
-              <span style={{ color: "#00d09c", fontWeight: "500" }}>Gold</span>
-            ) : (
-              <span>Gold</span>
-            )}
-            {/* Gold */}
-            {/* <Line /> */}
-            {gold && <Line />}
-          </Link>
-        </Gold>
-        <USstocks>
-          <Link to="/us-stocks">
-            {usColor ? (
-              <span style={{ color: "#00d09c", fontWeight: "500" }}>
-                US Stocks
-              </span>
-            ) : (
-              <span>US Stocks</span>
-            )}
-            {/* US Stocks */}
-            {/* <Line /> */}
-            {usStocks && <Line />}
-          </Link>
-        </USstocks>
         <FutureOptions>
           {/* Futures & Options
           <Line /> */}

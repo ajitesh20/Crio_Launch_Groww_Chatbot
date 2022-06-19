@@ -23,7 +23,7 @@ authHelper.registerUser = async (req, res) => {
             const token = auth.createAccessToken(data);
             res.status(200).json({ token: token, name: user.name, email: user.email });
         } else {
-            res.status(409).json({ msg: "Conflict" });
+            res.status(409).json({ msg: "user already exists" });
         }
     } catch (err) {
         console.log(err);

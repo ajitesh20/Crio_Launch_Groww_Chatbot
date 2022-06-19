@@ -9,12 +9,12 @@ const registerPostIn = {
             .email()
             .required(),
         password: Joi.string()
-            .regex(/[a-zA-Z0-9]{6,30}/)
+            .regex(/[a-zA-Z0-9]{2,30}/)
             .required(),
         role: Joi.string()
     })
 }
-authValidator.registerValidation = validate(registerPostIn, {}, {allowUnknown: true})
+authValidator.registerValidation = validate(registerPostIn, {}, { allowUnknown: true })
 
 const loginPostIn = {
     headers: Joi.object({
@@ -26,6 +26,6 @@ const loginPostIn = {
             .required(),
     })
 }
-authValidator.loginValidation = validate(loginPostIn, {}, {allowUnknown: true})
+authValidator.loginValidation = validate(loginPostIn, {}, { allowUnknown: true })
 
 module.exports = authValidator;

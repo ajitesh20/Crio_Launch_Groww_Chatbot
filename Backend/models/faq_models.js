@@ -8,7 +8,7 @@ const faqSchema = new mongoose.Schema({
     answer: {
         type: String
     },
-    tags: [{type: String}],
+    tags: [{ type: String }],
     status: {
         type: String,
         enum: ["Answered", "Unanswered"],
@@ -16,5 +16,7 @@ const faqSchema = new mongoose.Schema({
         default: "Unanswered"
     }
 })
-faqSchema.index({question: 'text'});
-exports.FAQ = new mongoose.model('FAQ', faqSchema);
+faqSchema.index({ question: 'text' });
+let FAQ = mongoose.model('FAQ', faqSchema);
+
+module.exports = FAQ;

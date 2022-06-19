@@ -1,30 +1,99 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@material-ui/core";
 
-function Card({ category, id, img, cardname, cardprice, cardrate }) {
+function Card1({ category, id, img, cardname, cardprice, cardrate }) {
   return (
     <Container>
       {category === "Stocks" ? (
         <Link to={`/stock/${id}`}>
-          <img src={img} alt="stocks"></img>
-          <CardName>{cardname}</CardName>
-          <CardPrice>{cardprice}</CardPrice>
-          <CardRate>{cardrate}</CardRate>
+          <Card className="card">
+            <CardMedia
+              component="img"
+              height="150"
+              image={img}
+              alt={cardname}
+              style={{ objectFit: "cover" }}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="body2" component="div">
+                {cardname}
+              </Typography>
+              <Typography variant="subtitle2">
+
+                <div className="price-change">
+                  ₹{cardprice}
+                  <br></br>
+                  {cardrate}
+                </div>
+
+              </Typography>
+            </CardContent>
+
+            <CardActions>
+              <Button
+                style={{
+                  backgroundColor: "#00a278",
+                  color: "white",
+                  width: "100%",
+                }}
+              >
+                BUY NOW
+              </Button>
+            </CardActions>
+          </Card>
         </Link>
       ) : (
         <Link to={`/mutual-fund/${id}`}>
-          <img src={img} alt="funds"></img>
+          {/* <img src={img} alt="funds"></img>
           <CardName>{cardname}</CardName>
           <CardPrice>{cardprice}</CardPrice>
-          <CardRate>{cardrate}</CardRate>
+          <CardRate>{cardrate}</CardRate> */}
+          <Card className="card">
+            <img src={img} alt="funds"></img>
+            <CardContent>
+              <Typography gutterBottom variant="body2" component="div">
+                {cardname}
+              </Typography>
+              <Typography variant="subtitle2">
+
+                <div className="price-change">
+                  ₹{cardprice}
+                  <br></br>
+                  {cardrate}
+                </div>
+
+              </Typography>
+            </CardContent>
+
+            <CardActions>
+              <Button
+                style={{
+                  backgroundColor: "#00a278",
+                  color: "white",
+                  width: "100%",
+                }}
+              >
+                BUY NOW
+              </Button>
+            </CardActions>
+          </Card>
         </Link>
       )}
     </Container>
   );
 }
 
-export default Card;
+export default Card1;
+
 const Container = styled.div`
   min-height: 190px;
   min-width: 168px;

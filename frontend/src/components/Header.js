@@ -137,16 +137,16 @@ function Header({ userData }) {
       </HeaderLogo>
 
       <HeaderLinks>
-        <Link to="/stocks">
+        {/* <Link to="/stocks">
           <Explore>Explore</Explore>
-        </Link>
-        <Investment>Investments</Investment>
+        </Link> */}
+        {/* <Investment>Investments</Investment> */}
       </HeaderLinks>
 
-      <HeaderSearch>
+      {/* <HeaderSearch>
         <input placeholder="Search stocks and mutual funds"></input>
         <SearchIcon />
-      </HeaderSearch>
+      </HeaderSearch> */}
 
       {isUserLogged ? (
         <HeaderIcons>

@@ -10,8 +10,7 @@ import StockDescription from "./components/StockDescription";
 import FundDescription from "./components/FundDescription";
 import Order from "./components/Order/Order";
 import Admin from "./components/Admin";
-import Dashboard from "./components/Dashboard";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { useState } from "react";
 import SorderDescription from "./components/Order/SorderDescription";
 import ForderDescription from "./components/Order/ForderDescription";
@@ -27,7 +26,16 @@ function App() {
     <div className="App">
       {showBot && <Chatbots />}
       {window.location.href.split("/")[3] === "admin" ? null : (
-        <Button onClick={() => toggleBot((prev) => !prev)}>Bot</Button>
+        <div>
+          <Button onClick={() => toggleBot((prev) => !prev)}>
+          
+          </Button>
+          {/* <img 
+            src="https://play-lh.googleusercontent.com/39g2e5o5TD1x0hC9NfDE7tsJLA9MY-3ny80fIJE1sT9SvBNNlC__z2jSqx3q56pMUg"
+            alt="BOT"
+          >
+          </img> */}
+        </div>
       )}
 
       <Router>
@@ -57,7 +65,9 @@ function App() {
         <Route path="/order/fund/:id" component={ForderDescription} />
         <Route path="/orders/:category" component={Order} />
         <Route path="/admin" component={Admin} />
-        <Route exact path="/" component={Dashboard} />
+        <Route exact path="/">
+         <Redirect to="/stocks" />
+        </Route>
 
         {window.location.href.split("/")[3] === "admin" ? null : <Footer />}
       </Router>
@@ -80,4 +90,8 @@ const Button = styled.button`
   outline: none;
   cursor: pointer;
   color: white;
+  background-image: url("https://play-lh.googleusercontent.com/39g2e5o5TD1x0hC9NfDE7tsJLA9MY-3ny80fIJE1sT9SvBNNlC__z2jSqx3q56pMUg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 `;

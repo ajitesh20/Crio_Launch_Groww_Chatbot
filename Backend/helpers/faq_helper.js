@@ -1,12 +1,12 @@
-const models = require('../models/faq_models');
+const faqModel = require('../models/faq_models');
 const Context = require('../utils/context');
-const productModels = require('../models/product_models');
+const productModel = require('../models/product_models');
 
 let faqHelper = {};
 
 faqHelper.getFAQ = async (req, res) => {
     try {
-        let faq = await models.FAQ.findById(req.params.id);
+        let faq = await faqModel.findById(req.params.id);
         if (faq) {
             res.status(200).json(faq);
         } else {
@@ -22,7 +22,7 @@ async function faqBasedOnContext(req, res) {
     const context = await contextManager.generateContext(req);
     const tags = await contextManager.mapContextToTags(context);
     console.log(tags)
-    const faqs = await models.FAQ.find({ tags: { '$in': tags }, status: "Answered" })
+    const faqs = await faqModel.find({ tags: { '$in': tags }, status: "Answered" })
         .limit(5);
     if (faqs.length > 0) {
         return ({
@@ -41,13 +41,13 @@ faqHelper.getAllFAQ = async (req, res) => {
     try {
 
         if (req.query.type == "Unanswered") {
-            const faqs = await models.FAQ.find({ status: "Unanswered" })
+            const faqs = await faqModel.find({ status: "Unanswered" })
             res.json(faqs).status(200)
             return;
         }
         console.log(req.query)
         if (req.query.message) {
-            const reply = await models.FAQ.findOne({ question: req.query.message, status: "Answered" });
+            const reply = await faqModel.findOne({ question: req.query.message, status: "Answered" });
             if (reply) {
                 res.json({
                     faqs: null,
@@ -56,7 +56,7 @@ faqHelper.getAllFAQ = async (req, res) => {
                 return;
             }
 
-            const faqs = await models.FAQ.find({ $text: { $search: req.query.message }, status: "Answered" })
+            const faqs = await faqModel.find({ $text: { $search: req.query.message }, status: "Answered" })
                 .sort({ score: { $meta: "textScore" } })
                 .limit(5);
             if (faqs.length > 0) {
@@ -86,17 +86,18 @@ faqHelper.raiseFAQTicket = async (req, res) => {
         if (req.body.answer) {
             status = "Answered"
         }
-        const newFaq = new models.FAQ({ ...req.body, status: status });
+        const newFaq = new faqModel({ ...req.body, status: status });
         await newFaq.save();
         res.status(201).json({ msg: "Created" });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ msg: error.message });
     }
 }
 
 faqHelper.updateFAQ = async (req, res) => {
     try {
-        let faq = await models.FAQ.findByIdAndUpdate(
+        let faq = await faqModel.findByIdAndUpdate(
             req.params.id,
             {
                 question: req.body.question,
@@ -115,13 +116,13 @@ faqHelper.getFaqTags = async (req, res) => {
     try {
         let allTags = [];
 
-        let faqs = await models.FAQ.find({}).select("tags");
+        let faqs = await faqModel.find({}).select("tags");
 
         faqs.forEach((faq) => {
             allTags = [...allTags, ...faq.tags]
         })
 
-        let products = await productModels.Product.find({}).select("name")
+        let products = await productModel.find({}).select("name")
         products.forEach((product) => {
             allTags.push(product.name.toLowerCase().replace(/\s+/g, ""))
         })
@@ -137,7 +138,7 @@ faqHelper.getFaqTags = async (req, res) => {
 
 faqHelper.createFAQ = async (req, res) => {
     try {
-        const newFaq = new models.FAQ(req.body, { status: "Answered" });
+        const newFaq = new faqModel(req.body, { status: "Answered" });
         await newFaq.save();
         res.status(201).json({ msg: "Created" });
     } catch (error) {

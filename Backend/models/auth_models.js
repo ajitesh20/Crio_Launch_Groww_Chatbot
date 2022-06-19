@@ -38,5 +38,6 @@ userSchema.methods.verifyPassword = async function (password) {
     let verify = await bcrypt.compare(password, user.password);
     return verify;
 }
-exports.User = mongoose.model('User', userSchema);
-// module.exports = User;
+
+let User = mongoose.model('User', userSchema);
+module.exports = User;

@@ -12,7 +12,6 @@ const stockSchema = new mongoose.Schema({
     EPS: String,
     ROE: String
 });
-exports.Stock = new mongoose.model('Stock', stockSchema);
 const Stock = new mongoose.model('Stock', stockSchema);
 
 const mutualFundSchema = new mongoose.Schema({
@@ -24,27 +23,26 @@ const mutualFundSchema = new mongoose.Schema({
     taxImplication: String,
     minSIP: String,
     fundStarted: String,
-    expRatio: String,
+    expRatio: String
 });
-exports.MutualFund = new mongoose.model('MutualFund', mutualFundSchema);
 const MutualFund = new mongoose.model('MutualFund', mutualFundSchema);
 
 const productSchema = new mongoose.Schema({
-    name: { 
+    name: {
         type: String,
         required: true
     },
-    about: { 
+    about: {
         type: String,
         required: true
     },
-    img: { 
+    img: {
         type: String,
         required: true
     },
     price: {
-       type: String,
-       required: true, 
+        type: String,
+        required: true,
     },
     rate: {
         type: String,
@@ -61,15 +59,15 @@ const productSchema = new mongoose.Schema({
         required: true
     }
 });
-productSchema.methods.getPayload = async function() {
+productSchema.methods.getPayload = async function () {
     let product = this;
-    
+
     let specs;
     if (product.category === "Mutual Fund") {
         specs = await MutualFund.findById(product.specifications);
     }
 
-    if (product.category === "Stocks") { 
+    if (product.category === "Stocks") {
         specs = await Stock.findById(product.specifications);
     }
 
@@ -80,5 +78,6 @@ productSchema.methods.getPayload = async function() {
         specifications: specs
     }
 }
-exports.Product = new mongoose.model('Product', productSchema);
 const Product = new mongoose.model("Product", productSchema);
+
+module.exports = { Product, MutualFund, Stock };

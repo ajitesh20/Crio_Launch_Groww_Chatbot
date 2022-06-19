@@ -99,7 +99,7 @@ function Footer() {
         </HorizontalLine>
         <CopyrightWrapper>
           <CopyrightText>
-            ⓒ&nbsp;2016-2021 Groww. All rights reserved, Built with{" "}
+            ⓒ&nbsp;2016-2022 Groww. All rights reserved, Built with{" "}
             <span style={{ color: "red" }}>♥️</span> in India
           </CopyrightText>
           <DownloadAppWrapper>
@@ -118,7 +118,7 @@ function Footer() {
           </DownloadAppWrapper>
         </CopyrightWrapper>
       </Container>
-      <PopularStockWrapper>
+      {/* <PopularStockWrapper>
         <PopularStockHeader>MOST POPULAR ON GROWW</PopularStockHeader>
         <StockMarkets>
           STOCK MARKET INDICES:&nbsp;&nbsp;
@@ -171,7 +171,7 @@ function Footer() {
           <Text>ABOUT GROWW</Text>
           <ExpandMoreIcon />
         </AboutGrowwRow>
-      </PopularStockWrapper>
+      </PopularStockWrapper> */}
     </BigContainer>
   );
 }

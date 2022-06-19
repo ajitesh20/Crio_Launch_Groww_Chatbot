@@ -17,8 +17,7 @@ productHelper.createProduct = async (req, res) => {
         await product.save();
         res.status(201).json({ msg: "Created" });
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ msg: err.message });
+        res.status(500).json({ error: err, msg: err.message });
     }
 }
 
@@ -45,7 +44,7 @@ productHelper.fetchAllProduct = async (req, res) => {
         }
         res.json(products);
     } catch (e) {
-        console.log(e.name);
+        console.log(e);
         res.status(500).json({ msg: "Server Error" });
     }
 }
