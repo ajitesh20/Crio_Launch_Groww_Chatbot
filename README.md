@@ -25,4 +25,4 @@ HOST=
 
 SECRET_KEY=
 
-To start backend & frontnd run *npm start* in different terminals in their respective folders.
+To start backend & frontend run **npm start** in different terminals in their respective folders.
